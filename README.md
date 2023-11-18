@@ -2,7 +2,7 @@
 
 This repository contains a Python script for generating a book using OpenAI's ChatGPT API.
 
-![BookCreation GIF](https://github.com/HFScripts/ChatGPTAutoBook/raw/main/non-fiction-social-media-influence/BookCreation.gif)
+![BookCreation GIF](https://github.com/pentestfunctions/ChatGPTAutoBook/raw/main/non-fiction-social-media-influence/BookCreation.gif)
 
 
 ## Table of Contents
@@ -27,7 +27,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 1. Clone the repository
     ```bash
-    git clone https://github.com/HFScripts/ChatGPTAutoBook.git
+    git clone https://github.com/pentestfunctions/ChatGPTAutoBook.git
     ```
 
 2. Navigate into the cloned directory
