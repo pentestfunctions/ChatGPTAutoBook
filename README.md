@@ -37,7 +37,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 3. Install the OpenAI Python client library
     ```bash
-    pip install openai
+    pip install openai==0.28
     ```
 
 4. Create a text file named `key.txt` in the directory one level up from the ChatGPTAutoBook directory and paste your OpenAI API key into it. The structure should look like this:
