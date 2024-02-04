@@ -9,12 +9,12 @@ def clear_screen():
     """Clears the terminal screen."""
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def global_exception_handler(exctype, value, traceback):
+def global_exception_handler(exctype, value, tb):
     print("An exception occurred:")
     print("Exception type:", exctype)
     print("Exception value:", value)
     print("Traceback:")
-    traceback.print_tb(traceback)
+    traceback.print_exception(exctype, value, tb)
 
 # Set the global exception handler
 sys.excepthook = global_exception_handler
@@ -41,18 +41,19 @@ def get_gpt_response(messages, max_retries=5):
     retry_count = 0
     while retry_count <= max_retries:
         try:
-            # Check the length of the message
             total_tokens = sum(len(message['content'].split()) for message in messages)
-            if total_tokens > 4000:
-                # Reduce the message length by removing characters from the end
-                while total_tokens > 4000:
-                    messages[-1]['content'] = messages[-1]['content'][:-1]
-                    total_tokens -= 1
-
+            
+            # Adjust the token buffer to ensure there's room for the API's response
+            token_buffer = 500  # Reserve a buffer for API responses
+            available_tokens = 4096 - total_tokens - token_buffer
+            
+            # Dynamically adjust max_tokens based on available space
+            max_completion_tokens = max(1, min(available_tokens, 3000))
+            
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=messages,
-                max_tokens=3000,
+                max_tokens=max_completion_tokens,
                 n=1,
                 stop=None,
                 temperature=0.5,
@@ -65,6 +66,7 @@ def get_gpt_response(messages, max_retries=5):
                 continue
             else:
                 raise
+
 
 def write_file(file_name, content, mode='w'):
     with open(file_name, mode) as file:
@@ -132,7 +134,7 @@ if chatGPT_author_type in ["fiction", "sci-fi", "teen fantasy", "romance", "myst
     character_response = get_gpt_response(generate_questions(chatGPT_author_type, user_input, f"You need to create a list of characters for the story and some defining traits. Make sure to give them names and descriptions\n {chapters}"))
     character_sheets = f"Character_Sheets.md"
     if character_response:
-        write_file(character_response)
+        write_file('Character_Sheets.md', character_response)
     for chapter_number, chapter in enumerate(chapters, start=1):
         # Generate the first chapter
         print(f"Generating Chapter {chapter_number}")
